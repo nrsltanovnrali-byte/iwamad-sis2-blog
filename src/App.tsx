@@ -1,6 +1,9 @@
 
+import { useState } from 'react'
 import { Routes, Route, NavLink, Outlet } from 'react-router'
 import Home from './pages/Home'
+import Posts from './pages/Posts'
+import PostDetails from './pages/PostDetails'
 import './App.css'
 
 function Layout() {
@@ -11,6 +14,7 @@ function Layout() {
 
         <nav>
           <NavLink to="/" end>Home</NavLink>
+          <NavLink to="/posts">Posts</NavLink>
         </nav>
       </header>
 
@@ -26,10 +30,21 @@ function Layout() {
 }
 
 function App() {
+  const [likes, setLikes] = useState<Record<number, boolean>>({})
+
+  function handleLike(id: number) {
+    setLikes({ ...likes, [id]: !likes[id] })
+  }
+
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/posts" element={<Posts />} />
+        <Route
+          path="/posts/:id"
+          element={<PostDetails likes={likes} onLike={handleLike} />}
+        />
       </Route>
     </Routes>
   )
